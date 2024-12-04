@@ -1,15 +1,36 @@
 import { component$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
+import { routeLoader$ } from "@builder.io/qwik-city";
+import { createAdminClient } from "../config/appwrite";
+import Heading from "../components/Heading";
+
+export const getAllRooms = routeLoader$(async (requestEvent) => {
+  const { databases } = await createAdminClient();
+
+  const { documents: rooms } = await databases.listDocuments(
+    import.meta.env.PUBLIC_APPWRITE_DATABASE,
+    import.meta.env.PUBLIC_APPWRITE_COLLECTIONS_ROOMS,
+  );
+
+  if (!rooms) {
+    return requestEvent.fail(404, {
+      errorMessage: "Failed to get rooms",
+    });
+  }
+
+  return rooms;
+});
 
 export default component$(() => {
+  const rooms = getAllRooms();
   return (
     <>
-      <h1>Hi 👋</h1>
-      <div>
-        Can't wait to see what you build with qwik!
-        <br />
-        Happy coding.
-      </div>
+      <Heading title="Available Rooms" />
+      {rooms.value.length > 0 ? (
+        rooms.value.map((room) => <h3 key={room.$id}>{room.name}</h3>)
+      ) : (
+        <p>No rooms available at this time.</p>
+      )}
     </>
   );
 });

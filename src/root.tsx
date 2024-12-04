@@ -1,4 +1,10 @@
-import { component$ } from "@builder.io/qwik";
+import {
+  component$,
+  useContextProvider,
+  useSignal,
+  createContextId,
+  type Signal,
+} from "@builder.io/qwik";
 import {
   QwikCityProvider,
   RouterOutlet,
@@ -9,6 +15,8 @@ import { isDev } from "@builder.io/qwik/build";
 
 import "./global.css";
 
+export const AuthContext = createContextId<Signal<boolean>>("AuthContext");
+
 export default component$(() => {
   /**
    * The root of a QwikCity site always start with the <QwikCityProvider> component,
@@ -16,6 +24,9 @@ export default component$(() => {
    *
    * Don't remove the `<head>` and `<body>` elements.
    */
+  const isAuthenticated = useSignal(false);
+
+  useContextProvider(AuthContext, isAuthenticated);
 
   return (
     <QwikCityProvider>
