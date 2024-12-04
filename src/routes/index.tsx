@@ -3,8 +3,10 @@ import type { DocumentHead } from "@builder.io/qwik-city";
 import { routeLoader$ } from "@builder.io/qwik-city";
 import { createAdminClient } from "../config/appwrite";
 import Heading from "../components/Heading";
+import RoomCard from "../components/RoomCard";
+import type { Room } from "../types/RoomTypes";
 
-export const getAllRooms = routeLoader$(async (requestEvent) => {
+export const useGetAllRooms = routeLoader$(async (requestEvent) => {
   const { databases } = await createAdminClient();
 
   const { documents: rooms } = await databases.listDocuments(
@@ -18,16 +20,16 @@ export const getAllRooms = routeLoader$(async (requestEvent) => {
     });
   }
 
-  return rooms;
+  return rooms as Room[];
 });
 
 export default component$(() => {
-  const rooms = getAllRooms();
+  const rooms = useGetAllRooms();
   return (
     <>
       <Heading title="Available Rooms" />
       {rooms.value.length > 0 ? (
-        rooms.value.map((room) => <h3 key={room.$id}>{room.name}</h3>)
+        rooms.value.map((room) => <RoomCard room={room} key={room.$id} />)
       ) : (
         <p>No rooms available at this time.</p>
       )}

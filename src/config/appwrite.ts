@@ -1,7 +1,8 @@
 import { Client, Databases, Account, Storage } from "node-appwrite";
+
 // Admin Client
 const createAdminClient = async () => {
-  const client = new Client()
+  const client: Client = new Client()
     .setEndpoint(import.meta.env.PUBLIC_APPWRITE_ENDPOINT)
     .setProject(import.meta.env.PUBLIC_APPWRITE_PROJECT)
     .setKey(import.meta.env.APPWRITE_API_KEY);
