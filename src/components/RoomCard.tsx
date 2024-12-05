@@ -1,5 +1,6 @@
 import { component$ } from "@builder.io/qwik";
 import { Image } from "@unpic/qwik";
+import placeholder from "@/assets/images/no-image.jpeg";
 import type { Room } from "../types/RoomTypes";
 
 const bucketId = import.meta.env.PUBLIC_APPWRITE_STORAGE_BUCKET_ROOMS;
@@ -8,7 +9,7 @@ const projectId = import.meta.env.PUBLIC_APPWRITE_PROJECT;
 export default component$(({ room }: { room: Room }) => {
   const imageUrl = `https://cloud.appwrite.io/v1/storage/buckets/${bucketId}/files/${room.image}/view?project=${projectId}`;
 
-  const imageSrc = room.image ? imageUrl : "../../assets/images/no-image.jpeg";
+  const imageSrc = room.image ? imageUrl : placeholder;
   return (
     <div class="mt-4 flex flex-col items-start justify-between rounded-lg bg-white p-4 shadow sm:flex-row sm:items-center">
       <div class="flex flex-col sm:flex-row sm:space-x-4">

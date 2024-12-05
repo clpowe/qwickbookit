@@ -39,14 +39,14 @@ export default component$(() => {
 
   const imageSrc = room.value.image
     ? imageUrl
-    : "../../../assets/images/no-image.jpeg";
+    : "./../../assets/images/no-image.jpeg";
 
   return (
     <>
       <Heading title={room.value.name!} />
       <div class="rounded-lg bg-white p-6 shadow">
         <Link
-          href="/rooms.html"
+          href="/"
           class="mb-4 flex items-center text-gray-600 hover:text-gray-800"
         >
           <LuChevronLeft class="mr-1 inline" />

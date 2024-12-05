@@ -1,6 +1,6 @@
 import { component$, useContext, $ } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
-import Logo from "./assets/images/logo.svg";
+import Logo from "@/assets/images/logo.svg";
 import { LuBuilding, LuLogIn, LuLogOut, LuUser } from "@qwikest/icons/lucide";
 
 import { AuthContext } from "@/root";
