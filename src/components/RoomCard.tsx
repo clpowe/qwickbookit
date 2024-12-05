@@ -14,6 +14,7 @@ export default component$(({ room }: { room: Room }) => {
       <div class="flex flex-col sm:flex-row sm:space-x-4">
         <Image
           src={imageSrc}
+          layout="height"
           width={400}
           height={400}
           alt={room.name}

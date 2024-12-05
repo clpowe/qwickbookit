@@ -7,24 +7,36 @@ import RoomCard from "../components/RoomCard";
 import type { Room } from "../types/RoomTypes";
 
 export const useGetAllRooms = routeLoader$(async (requestEvent) => {
-  const { databases } = await createAdminClient();
+  try {
+    const { databases } = await createAdminClient();
 
-  const { documents: rooms } = await databases.listDocuments(
-    import.meta.env.PUBLIC_APPWRITE_DATABASE,
-    import.meta.env.PUBLIC_APPWRITE_COLLECTIONS_ROOMS,
-  );
+    const { documents: rooms } = await databases.listDocuments(
+      import.meta.env.PUBLIC_APPWRITE_DATABASE,
+      import.meta.env.PUBLIC_APPWRITE_COLLECTIONS_ROOMS,
+    );
 
-  if (!rooms) {
+    return rooms as Room[];
+  } catch (error) {
+    console.log(error);
     return requestEvent.fail(404, {
+      error,
       errorMessage: "Failed to get rooms",
     });
   }
-
-  return rooms as Room[];
 });
 
 export default component$(() => {
   const rooms = useGetAllRooms();
+
+  if (rooms.value.errorMessage) {
+    return (
+      <>
+        <Heading title="Available Rooms" />
+        <p>{rooms.value.errorMessage}</p>
+      </>
+    );
+  }
+
   return (
     <>
       <Heading title="Available Rooms" />

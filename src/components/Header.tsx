@@ -3,7 +3,7 @@ import { Link } from "@builder.io/qwik-city";
 import Logo from "./assets/images/logo.svg";
 import { LuBuilding, LuLogIn, LuLogOut, LuUser } from "@qwikest/icons/lucide";
 
-import { AuthContext } from "~/root";
+import { AuthContext } from "@/root";
 import { Image } from "@unpic/qwik";
 
 export default component$(() => {
