@@ -2,6 +2,8 @@ import { component$ } from "@builder.io/qwik";
 import { Link, routeLoader$ } from "@builder.io/qwik-city";
 import { createAdminClient } from "@/config/appwrite";
 import Heading from "@/components/Heading";
+import BookingForm from "@/components/BookingForm";
+
 import { LuChevronLeft } from "@qwikest/icons/lucide";
 import { Image } from "@unpic/qwik";
 import type { Room } from "@/types/RoomTypes";
@@ -87,7 +89,7 @@ export default component$(() => {
           </div>
         </div>
 
-        {/* <BookingForm room={room} /> */}
+        <BookingForm room={room} />
       </div>
     </>
   );

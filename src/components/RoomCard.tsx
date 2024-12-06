@@ -1,7 +1,7 @@
 import { component$ } from "@builder.io/qwik";
 import { Image } from "@unpic/qwik";
 import placeholder from "@/assets/images/no-image.jpeg";
-import type { Room } from "../types/RoomTypes";
+import type { Room } from "@/types/RoomTypes";
 
 const bucketId = import.meta.env.PUBLIC_APPWRITE_STORAGE_BUCKET_ROOMS;
 const projectId = import.meta.env.PUBLIC_APPWRITE_PROJECT;

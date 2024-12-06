@@ -1,34 +1,35 @@
 import { component$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import { routeLoader$ } from "@builder.io/qwik-city";
-import { createAdminClient } from "../config/appwrite";
+import { createAdminClient } from "@/config/appwrite";
 import Heading from "../components/Heading";
 import RoomCard from "../components/RoomCard";
 import type { Room } from "../types/RoomTypes";
+import { catchError } from "@/library/utils";
 
 export const useGetAllRooms = routeLoader$(async (requestEvent) => {
-  try {
-    const { databases } = await createAdminClient();
-
-    const { documents: rooms } = await databases.listDocuments(
+  const { databases } = await createAdminClient();
+  const [error, data] = await catchError(
+    databases.listDocuments(
       import.meta.env.PUBLIC_APPWRITE_DATABASE,
       import.meta.env.PUBLIC_APPWRITE_COLLECTIONS_ROOMS,
-    );
+    ),
+  );
 
-    return rooms as Room[];
-  } catch (error) {
-    console.log(error);
+  if (error) {
     return requestEvent.fail(404, {
       error,
       errorMessage: "Failed to get rooms",
     });
   }
+
+  return data.documents as Room[];
 });
 
 export default component$(() => {
   const rooms = useGetAllRooms();
 
-  if (rooms.value.errorMessage) {
+  if (rooms.value.errorMessage || rooms.value.length === 0) {
     return (
       <>
         <Heading title="Available Rooms" />
@@ -40,7 +41,7 @@ export default component$(() => {
   return (
     <>
       <Heading title="Available Rooms" />
-      {rooms.value.length > 0 ? (
+      {!rooms.value.error ? (
         rooms.value.map((room) => <RoomCard room={room} key={room.$id} />)
       ) : (
         <p>No rooms available at this time.</p>

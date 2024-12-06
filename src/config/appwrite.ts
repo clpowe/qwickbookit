@@ -1,11 +1,10 @@
 import { Client, Databases, Account, Storage } from "node-appwrite";
-
 // Admin Client
 const createAdminClient = async () => {
   const client: Client = new Client()
     .setEndpoint(import.meta.env.PUBLIC_APPWRITE_ENDPOINT)
     .setProject(import.meta.env.PUBLIC_APPWRITE_PROJECT)
-    .setKey(import.meta.env.APPWRITE_API_KEY);
+    .setKey(process.env.APPWRITE_API_KEY as string);
 
   return {
     get account() {
@@ -20,7 +19,7 @@ const createAdminClient = async () => {
   };
 };
 
-const createSessionClient = async (session) => {
+const createSessionClient = async (session: string) => {
   const client = new Client()
     .setEndpoint(import.meta.env.PUBLIC_APPWRITE_ENDPOINT)
     .setProject(import.meta.env.PUBLIC_APPWRITE_PROJECT);
