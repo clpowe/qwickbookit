@@ -3,6 +3,7 @@ import { Link, routeLoader$ } from "@builder.io/qwik-city";
 import { createAdminClient } from "@/config/appwrite";
 import Heading from "@/components/Heading";
 import BookingForm from "@/components/BookingForm";
+import { catchError } from "@/library/utils";
 
 import { LuChevronLeft } from "@qwikest/icons/lucide";
 import { Image } from "@unpic/qwik";
@@ -12,13 +13,16 @@ export const useGetSingleRoom = routeLoader$(async (requestEvent) => {
   const { databases } = await createAdminClient();
 
   // Fetch all rooms
-  const room = await databases.getDocument(
-    import.meta.env.PUBLIC_APPWRITE_DATABASE,
-    import.meta.env.PUBLIC_APPWRITE_COLLECTIONS_ROOMS,
-    requestEvent.params.id,
+  const [error, room] = await catchError(
+    databases.getDocument(
+      import.meta.env.PUBLIC_APPWRITE_DATABASE,
+      import.meta.env.PUBLIC_APPWRITE_COLLECTIONS_ROOMS,
+      requestEvent.params.id,
+    ),
   );
 
-  if (!room) {
+  if (error) {
+    console.log(error);
     return requestEvent.fail(404, {
       errorMessage: "Room not found",
     });
@@ -89,7 +93,7 @@ export default component$(() => {
           </div>
         </div>
 
-        <BookingForm room={room} />
+        <BookingForm room={room.value} />
       </div>
     </>
   );

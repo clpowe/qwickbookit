@@ -1,7 +1,15 @@
-import { component$ } from "@builder.io/qwik";
-import { zod$, z, Link, routeAction$, Form } from "@builder.io/qwik-city";
+import { component$, useContext, useTask$ } from "@builder.io/qwik";
+import {
+  zod$,
+  z,
+  Link,
+  routeAction$,
+  Form,
+  useNavigate,
+} from "@builder.io/qwik-city";
 import { createAdminClient } from "@/config/appwrite";
 import { catchError } from "@/library/utils";
+import { UserSessionContext } from "@/root";
 
 export const useLogin = routeAction$(
   async (data, { cookie }) => {
@@ -45,7 +53,20 @@ export const useLogin = routeAction$(
 );
 
 export default component$(() => {
+  const nav = useNavigate();
   const action = useLogin();
+  const session = useContext(UserSessionContext);
+
+  useTask$(({ track }) => {
+    track(action);
+
+    if (action.value?.success) {
+      session.isAuthenticated = true;
+      nav("/");
+    } else {
+      console.log("not authenticated");
+    }
+  });
 
   return (
     <div class="flex items-center justify-center">

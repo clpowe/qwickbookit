@@ -2,6 +2,7 @@ import { component$, Slot } from "@builder.io/qwik";
 import type { RequestHandler } from "@builder.io/qwik-city";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { Toaster } from "qwik-sonner";
 
 export const onGet: RequestHandler = async ({ cacheControl }) => {
   // Control caching for this request for best performance and to reduce hosting costs:
@@ -19,6 +20,7 @@ export default component$(() => {
     <>
       <Header />
       <main class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <Toaster position="top-right" richColors duration={10000} closeButton />
         <Slot />
       </main>
       <Footer />
