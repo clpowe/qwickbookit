@@ -19,7 +19,7 @@ export const onRequest: RequestHandler = async ({ next, redirect, cookie }) => {
 export const useCreateRoom = routeAction$(async (data, { cookie }) => {
   const { databases, storage } = await createAdminClient();
 
-  const [error, { user }] = await catchError(loadSessionFromCookie(cookie));
+  const [error, userSession] = await catchError(loadSessionFromCookie(cookie));
   if (error) {
     return {
       error: error.message,
@@ -54,7 +54,7 @@ export const useCreateRoom = routeAction$(async (data, { cookie }) => {
         import.meta.env.PUBLIC_APPWRITE_COLLECTIONS_ROOMS,
         ID.unique(),
         {
-          user_id: user.id,
+          user_id: userSession.user?.id,
           name: data.name,
           description: data.description,
           sqft: data.sqft,
