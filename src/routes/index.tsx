@@ -1,11 +1,45 @@
 import { component$ } from "@builder.io/qwik";
-import type { DocumentHead } from "@builder.io/qwik-city";
+import type { DocumentHead, Cookie } from "@builder.io/qwik-city";
 import { routeLoader$ } from "@builder.io/qwik-city";
-import { createAdminClient } from "@/config/appwrite";
+import { createAdminClient, createSessionClient } from "@/config/appwrite";
 import Heading from "../components/Heading";
 import RoomCard from "../components/RoomCard";
 import type { Room } from "../types/RoomTypes";
 import { catchError } from "@/library/utils";
+import type { UserSession } from "@/types/UserTypes";
+
+export async function loadSessionFromCookie(
+  cookie: Cookie,
+): Promise<UserSession> {
+  const session = cookie.get("appwrite-session");
+  if (!session) {
+    return {
+      isAuthenticated: false,
+    };
+  }
+
+  const [error, account] = await catchError(createSessionClient(session.value));
+  if (error) {
+    return {
+      isAuthenticated: false,
+    };
+  }
+
+  const [error2, user] = await catchError(account.account.get());
+  if (error2) {
+    return {
+      isAuthenticated: false,
+    };
+  }
+  return {
+    isAuthenticated: true,
+    user: {
+      id: user.$id,
+      name: user.name,
+      email: user.email,
+    },
+  };
+}
 
 export const useGetAllRooms = routeLoader$(async (requestEvent) => {
   const { databases } = await createAdminClient();

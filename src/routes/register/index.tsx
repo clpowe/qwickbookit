@@ -26,7 +26,6 @@ export const useRegister = routeAction$(
     console.log(user);
 
     if (error) {
-      console.log(error);
       return {
         error: "Could not create user",
       };

@@ -1,10 +1,10 @@
 import { component$ } from "@builder.io/qwik";
 import type { Room } from "@/types/RoomTypes";
-import { routeAction$, Form } from "@builder.io/qwik-city";
+import { globalAction$, Form } from "@builder.io/qwik-city";
 
-export const useBookRoom = routeAction$(async (requestEvent) => {});
+export const useBookRoom = globalAction$(async () => {});
 
-export default component$(({ room }: { room: Room }) => {
+export default component$<Room>(({ room }) => {
   const action = useBookRoom();
   return (
     <div class="mt-6">

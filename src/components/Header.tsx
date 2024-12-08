@@ -1,41 +1,12 @@
 import { component$, useContext } from "@builder.io/qwik";
-import { Link, globalAction$, useNavigate } from "@builder.io/qwik-city";
+import { Link, useNavigate, Form } from "@builder.io/qwik-city";
 import Logo from "@/assets/images/logo.svg";
 import { LuBuilding, LuLogIn, LuLogOut, LuUser } from "@qwikest/icons/lucide";
-import { createSessionClient } from "@/config/appwrite";
-import { catchError } from "@/library/utils";
+import { useLogout } from "@/shared/loaders";
 import { toast } from "qwik-sonner";
 
 import { UserSessionContext } from "@/root";
 import { Image } from "@unpic/qwik";
-
-export const useLogout = globalAction$(async (data, { cookie }) => {
-  const session = cookie.get("appwrite-session");
-
-  if (!session) {
-    return {
-      error: "No session cookie found",
-    };
-  }
-
-  const { account } = await createSessionClient(session.value);
-
-  const [error] = await catchError(account.deleteSession("current"));
-
-  if (error) {
-    console.error(error);
-    return {
-      success: false,
-      error: "Error deleting session",
-    };
-  }
-
-  cookie.delete("appwrite-session");
-
-  return {
-    success: true,
-  };
-});
 
 export default component$(() => {
   const nav = useNavigate();
@@ -111,20 +82,24 @@ export default component$(() => {
                   >
                     <LuBuilding /> My Rooms
                   </Link>
-                  <button
-                    onClick$={async () => {
-                      await logout.submit();
+                  <Form
+                    action={logout}
+                    onSubmitCompleted$={() => {
                       if (logout.value?.error) {
                         toast.error(logout.value.error);
                       } else {
                         session.isAuthenticated = false;
-                        await nav("/login");
+                        nav("/login");
                       }
                     }}
-                    class="mx-3 flex items-center gap-1 text-gray-800 hover:text-gray-600"
                   >
-                    <LuLogOut /> Sign Out
-                  </button>
+                    <button
+                      type="submit"
+                      class="mx-3 flex items-center gap-1 text-gray-800 hover:text-gray-600"
+                    >
+                      <LuLogOut /> Sign Out
+                    </button>
+                  </Form>
                 </>
               )}
             </div>

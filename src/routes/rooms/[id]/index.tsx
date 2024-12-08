@@ -22,7 +22,6 @@ export const useGetSingleRoom = routeLoader$(async (requestEvent) => {
   );
 
   if (error) {
-    console.log(error);
     return requestEvent.fail(404, {
       errorMessage: "Room not found",
     });

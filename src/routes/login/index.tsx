@@ -1,4 +1,4 @@
-import { component$, useContext, useTask$ } from "@builder.io/qwik";
+import { component$, useContext } from "@builder.io/qwik";
 import {
   zod$,
   z,
@@ -57,21 +57,20 @@ export default component$(() => {
   const action = useLogin();
   const session = useContext(UserSessionContext);
 
-  useTask$(({ track }) => {
-    track(action);
-
-    if (action.value?.success) {
-      session.isAuthenticated = true;
-      nav("/");
-    } else {
-      console.log("not authenticated");
-    }
-  });
-
   return (
     <div class="flex items-center justify-center">
       <div class="mt-20 w-full max-w-sm rounded-lg bg-white p-6 shadow-lg">
-        <Form action={action}>
+        <Form
+          action={action}
+          onSubmitCompleted$={() => {
+            if (action.value?.error) {
+              // handle error
+            } else {
+              session.isAuthenticated = true;
+              nav("/");
+            }
+          }}
+        >
           <h2 class="mb-6 text-center text-2xl font-bold text-gray-800">
             Login
           </h2>
