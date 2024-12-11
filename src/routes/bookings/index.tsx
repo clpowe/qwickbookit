@@ -29,7 +29,7 @@ export const useBookings = routeLoader$(async ({ redirect, cookie }) => {
     throw redirect(302, "/login");
   }
 
-  const [error2, { documents: bookings }] = await catchError(
+  const [error2, data] = await catchError(
     databases.listDocuments(
       import.meta.env.PUBLIC_APPWRITE_DATABASE,
       import.meta.env.PUBLIC_APPWRITE_COLLECTIONS_BOOKINGS,
@@ -43,13 +43,13 @@ export const useBookings = routeLoader$(async ({ redirect, cookie }) => {
     };
   }
 
-  return bookings;
+  return data.documents;
 });
 
 export default component$(() => {
   const bookings = useBookings();
 
-  if (bookings.value?.error) {
+  if (bookings.value.error) {
     return <p>{bookings.value.error}</p>;
   }
 

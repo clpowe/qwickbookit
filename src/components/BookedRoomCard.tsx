@@ -35,12 +35,12 @@ export default component$(({ booking }) => {
         </p>
       </div>
       <div class="mt-2 flex w-full flex-col sm:mt-0 sm:w-auto sm:flex-row sm:space-x-2">
-        <Link
-          href={`/rooms/${room.$id}`}
+        <a
+          href="/rooms/674d114f0009502a5ebc"
           class="mb-2 w-full rounded bg-blue-500 px-4 py-2 text-center text-white hover:bg-blue-700 sm:mb-0 sm:w-auto"
         >
           View Room
-        </Link>
+        </a>
         {/* <CancelBookingButton bookingId={booking.$id} /> */}
       </div>
     </div>

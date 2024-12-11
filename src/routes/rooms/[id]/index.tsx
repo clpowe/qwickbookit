@@ -9,6 +9,10 @@ import { LuChevronLeft } from "@qwikest/icons/lucide";
 import { Image } from "@unpic/qwik";
 import type { Room } from "@/types/RoomTypes";
 
+interface RoomWithError extends Room {
+  errorMessage?: string;
+}
+
 export const useGetSingleRoom = routeLoader$(async (requestEvent) => {
   const { databases } = await createAdminClient();
 
@@ -21,21 +25,18 @@ export const useGetSingleRoom = routeLoader$(async (requestEvent) => {
     ),
   );
 
-  if (error) {
-    return requestEvent.fail(404, {
+  if (error?.message) {
+    console.log("Error", error);
+    return {
       errorMessage: "Room not found",
-    });
+    };
   }
 
-  return room as Room;
+  return room;
 });
 
 export default component$(() => {
-  const room = useGetSingleRoom();
-
-  if (room.value.errorMessage) {
-    return <Heading title="Room not found" />;
-  }
+  const room = useGetSingleRoom() as unknown as RoomWithError;
 
   const bucketId = process.env.PUBLIC_APPWRITE_STORAGE_BUCKET_ROOMS;
   const projectId = process.env.PUBLIC_APPWRITE_PROJECT;
@@ -62,7 +63,7 @@ export default component$(() => {
           <Image
             layout="height"
             src={imageSrc}
-            alt={room.value.name}
+            alt={room.value?.name}
             width={400}
             height={100}
             class="h-64 w-full rounded-lg object-cover sm:w-1/3"
