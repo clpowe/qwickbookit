@@ -26,7 +26,7 @@ export const useCreateRoom = routeAction$(async (data, { cookie }) => {
     };
   }
 
-  if (!user) {
+  if (!userSession.user) {
     return {
       error: "You must be logged in to create a room",
     };
@@ -35,7 +35,7 @@ export const useCreateRoom = routeAction$(async (data, { cookie }) => {
   let imageID;
 
   const image = data.image as unknown as File;
-  if (image && image.size > 0 && image.name != "undefined") {
+  if (image.size > 0 && image.name != "undefined") {
     const [error, result] = await catchError(
       storage.createFile("rooms", ID.unique(), image),
     );
@@ -54,7 +54,7 @@ export const useCreateRoom = routeAction$(async (data, { cookie }) => {
         import.meta.env.PUBLIC_APPWRITE_COLLECTIONS_ROOMS,
         ID.unique(),
         {
-          user_id: userSession.user?.id,
+          user_id: userSession.user.id,
           name: data.name,
           description: data.description,
           sqft: data.sqft,

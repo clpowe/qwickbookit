@@ -4,6 +4,7 @@ import type { RequestHandler } from "@builder.io/qwik-city";
 import Heading from "@/components/Heading";
 import BookedRoomCard from "@/components/BookedRoomCard";
 import { Query } from "node-appwrite";
+import type {} from "@/types/RoomTypes";
 
 import { loadSessionFromCookie } from "@/routes/index";
 import { catchError } from "@/library/utils";
@@ -19,6 +20,7 @@ export const onRequest: RequestHandler = async ({ next, redirect, cookie }) => {
 
 export const useBookings = routeLoader$(async ({ redirect, cookie }) => {
   const sessionCookie = cookie.get("appwrite-session");
+
   if (!sessionCookie) {
     throw redirect(302, "/login");
   }
@@ -56,7 +58,7 @@ export default component$(() => {
   return (
     <>
       <Heading title="My Bookings" />
-      {bookings.value?.length === 0 ? (
+      {bookings.value.length === 0 ? (
         <p class="mt-4 text-gray-600">You have no bookings</p>
       ) : (
         bookings.value.map((booking) => (
